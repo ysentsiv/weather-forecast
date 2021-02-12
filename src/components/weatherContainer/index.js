@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { CityID } from "../../enums";
+import React, { Fragment, useState } from "react";
+import { CityID, Units, DataType } from "../../enums";
 import CityWeather from "../CityWeather"
 import CityForecast from "../CityForecast"
 
@@ -7,35 +7,33 @@ const WeatherContainer = () => {
   const [weather, setWeather] = useState({});
   const [forecast, setForecast] = useState({});
   const [cityID, setCityID] = useState();
+  const [displayForecast, setDisplayForecast] = useState(false);
 
-	const getWeather = (cityID) => {
-		const URL = `http://api.openweathermap.org/data/2.5/weather?id=${cityID}&appid=538882fc8387290c6cee83f313a6acf5 `
-		fetch(URL)
+	const getWeather = (cityID, units, dataType) => {
+		const URL = `http://api.openweathermap.org/data/2.5/${dataType}?id=${cityID}&appid=538882fc8387290c6cee83f313a6acf5&units=${units}`
+		return fetch(URL)
       .then(res => res.json())
 			.then(response => {
+        return response;
+      })
+			.catch(error => console.log(error));
+	}
+
+  const handleCitySelection = (e) => {
+    const cityID = e.target.value;
+    getWeather(cityID, Units.C, DataType.Weather)
+      .then(response => {
         setWeather(response);
         setCityID(cityID);
-      })
-			.catch(error => console.log(error));
-	}
-
-	const getForecast = (cityID) => {
-		const URL = `http://api.openweathermap.org/data/2.5/forecast?id=${cityID}&appid=538882fc8387290c6cee83f313a6acf5`
-		fetch(URL)
-      .then(res => res.json())
-			.then(response => {
-        setForecast(response);
-      })
-			.catch(error => console.log(error));
-	}
-
-  const handleCitySelection = async (e) => {
-			const cityID = e.target.value;
-			getWeather(cityID);
+      });
   }
 
-  const handleCityForecast = async () => {
-			getForecast(cityID);
+  const handleCityForecast = () => {
+    getWeather(cityID, Units.C, DataType.Forecast)
+      .then(response => {
+        setForecast(response);
+        setDisplayForecast(displayForecast => !displayForecast)
+    });
   }
 
     return (
@@ -47,9 +45,19 @@ const WeatherContainer = () => {
                 <option value={CityID.Tokyo} onClick={handleCitySelection}>Tokyo</option>
             </select>
 
-						<CityWeather weatherData={weather} />
-						{cityID ? <button onClick={handleCityForecast}>See Forecast</button> : ''}
-						<CityForecast forecastData={forecast} />
+            {cityID ? (
+              <Fragment>
+                <CityWeather weatherData={weather} />
+                <button onClick={handleCityForecast}>See Forecast</button>
+              </Fragment>
+            ) : ''}
+
+            {displayForecast ? (
+              <Fragment>
+                <CityForecast forecastData={forecast} />
+              </Fragment>
+            ) : ''}
+
         </div>
     );
 };
