@@ -11,7 +11,6 @@ const CityForecast = (forecastData) => {
     const dayGroupedDataList = groupBy(dataList, forecastDay);
     const [currentDayForecast, setCurrentDayForecast] = useState(dayGroupedDataList[Object.keys(dayGroupedDataList)[0]]);
 
-    console.log(currentDayForecast);
     const paginationSize = 6;
 
     const handleDayForecast = (day) => {
@@ -45,10 +44,10 @@ const CityForecast = (forecastData) => {
                     {currentDayForecast.map((forecastField, index) => (
                         <tr key={index}>
                             <td colSpan="2">{forecastField.dt_txt}</td>
-                            <td>{forecastField.main.temp}</td>
-                            <td>{forecastField.main.temp_min}</td>
-                            <td>{forecastField.main.temp_max}</td>
-                            <td>{forecastField.wind.speed}</td>
+                            <td>{`${forecastField.main.temp} \xB0C`}</td>
+                            <td>{`${forecastField.main.temp_min} \xB0C`}</td>
+                            <td>{`${forecastField.main.temp_max} \xB0C`}</td>
+                            <td>{`${forecastField.wind.speed}  m/sec`}</td>
                             <td>{forecastField.weather[0].description}</td>
                         </tr>
                     ))}
