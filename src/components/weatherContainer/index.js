@@ -1,7 +1,8 @@
 import React, { Fragment, useState } from "react";
 import { CityID, Units, DataType } from "../../enums";
-import CityWeather from "../CityWeather"
-import CityForecast from "../CityForecast"
+import CityWeather from "../CityWeather";
+import CityForecast from "../CityForecast";
+import './styles.scss';
 
 const WeatherContainer = () => {
   const [weather, setWeather] = useState({});
@@ -25,6 +26,7 @@ const WeatherContainer = () => {
       .then(response => {
         setWeather(response);
         setCityID(cityID);
+        setDisplayForecast(false)
       });
   }
 
@@ -37,7 +39,7 @@ const WeatherContainer = () => {
   }
 
     return (
-        <div>
+        <div className='weatherContainer'>
             <select name="citySelector" id="citySelector">
                 <option value="DEFAULT" disabled selected>City</option>
                 <option value={CityID.Toronto} onClick={handleCitySelection}>Toronto</option>

@@ -1,5 +1,6 @@
 import './stylesheet/App.css';
 import WeatherContainer from './components/weatherContainer';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
